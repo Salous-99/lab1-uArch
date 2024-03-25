@@ -167,6 +167,8 @@ def RSAAttack(n,data, ratio):
 			print "Guessed Correctly! Private key is: \t", newkey
 			finished = True
 		bit+=1 # go to next bit.
+	
+ 	return newkey
 
 if __name__ == "__main__":
 	""" Read in a .csv file containing a list of messages, signatures, and the duration of the signing operation.
@@ -177,18 +179,17 @@ if __name__ == "__main__":
 		path = sys.argv[1]
 		difference = sys.argv[2]
 	else:
-		path = 'output/2ms_sleep_33bit_key'
-		difference = 4500000
 		print "usage: python RSAAttack.py <path/to/dataset> <difference>"
 		print "the data should be in a file called data.csv, in the path given."
 		print " <difference> is the difference in nanoseconds between trueSet and falseSet required to guess that the bit is 1."
-		print "using defaults:", path, difference
-	
+		exit()
+  	
 	with open(path+'/data.csv', 'rb') as f:
 		_ = f.readline() # Ignore first line (which is a column description)
-		n, e = f.readline().split(',') # read in public key
+		n, e, d = f.readline().split(',') # read in public key
 		n = int(n)
 		e = int(e)
+		d = int(d)
 		_=f.readline() # ignore third line (which is a column description)
 		data = [[int(x) for x in line.split(',')] for line in f] # read in signature data.
 	# n = 97*103
@@ -202,4 +203,6 @@ if __name__ == "__main__":
 	# 1.000005
 	# 0.999985296678
 	# 0.999998070523
-	RSAAttack(n,data, int(difference))
+	keyGuess = RSAAttack(n,data, int(difference))
+	print "Actual key: \n\t(binary)", bin(d), "\t(decimal)", d
+	print "Guessed key:\n\t(binary)", "0b" + keyGuess, "\t(decimal)", int("0b" + keyGuess, 2)

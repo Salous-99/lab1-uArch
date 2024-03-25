@@ -70,11 +70,9 @@ int main(int argc, const char * argv[]) {
     rsa.setExpFunc(MODEXP_SLEEP);
 
     printf("Using the following keys:\n");
-    rsa.d = 7;
     rsa.printKeys();
 
-    teste();
-
+    // teste();
 
     timed_sign(atoi(argv[4]));
     return 0;
@@ -91,8 +89,8 @@ void timed_sign(const int messageCount){
     std::ofstream csvfile;
 
     csvfile.open("data.csv");
-    csvfile << "N,E" << std::endl;
-    csvfile << rsa.n << "," << rsa.e << std::endl;
+    csvfile << "N,E,D" << std::endl;
+    csvfile << rsa.n << ',' << rsa.e << ',' << rsa.d << std::endl;
     csvfile << "message,signature,duration" << std::endl;
     timepoint start, end;
     num message;
