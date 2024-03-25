@@ -93,8 +93,10 @@ void timed_sign(const int messageCount){
     csvfile << rsa.n << ',' << rsa.e << ',' << rsa.d << std::endl;
     csvfile << "message,signature,duration" << std::endl;
     timepoint start, end;
+    timepoint startTotal, endTotal;
     num message;
     TimedSignature current;
+    startTotal = std::chrono::system_clock::now();
     for (int i = 0; i < messageCount; i++) {
         // Generate a random message between 0 and the modulus.
         message = bigrand(rsa.n);
@@ -105,6 +107,8 @@ void timed_sign(const int messageCount){
         current.duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
         csvfile << current << "\n";
     }
+    endTotal = std::chrono::system_clock::now();
     csvfile.close();
     printf("done.\n");
+    printf("Total time taken: %llu\n", std::chrono::duration_cast<std::chrono::nanoseconds>(endTotal - startTotal));
 }
